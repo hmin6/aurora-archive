@@ -23,7 +23,11 @@ jobs:
     # Only main is archived. A manual run from another branch does nothing.
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # Worst case if every source hangs: 6 sources × (3 attempts × 30 s timeout + 2 s + 4 s
+    # backoff) = 6 × 96 s ≈ 9.6 min, plus checkout, setup, and the commit. The 30 s timeout
+    # is per socket operation, so a server that trickles bytes can take longer; 20 min
+    # leaves room for that, so the commit step still runs and the failures get recorded.
+    timeout-minutes: 20
     steps:
       # Actions are pinned to full commit SHAs: this job can push to main, so the code
       # it runs must not change underneath it when a tag moves.
