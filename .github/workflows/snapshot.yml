@@ -1,0 +1,71 @@
+name: Snapshot
+
+on:
+  schedule:
+    # 05:17 and 17:17 UTC. An off-hour minute, because runs at the top of the hour are
+    # delayed most. Twice a day because the solar-wind JSON only holds 24 hours (the
+    # 12-hour overlap absorbs a late run) and the forecast discussion is issued at
+    # 00:30 and 12:30 UTC.
+    - cron: "17 5,17 * * *"
+  workflow_dispatch:
+
+# The repo default is read-only; the commit step needs to push.
+permissions:
+  contents: write
+
+# Queue a second run instead of cancelling the first, so no run is killed mid-fetch.
+concurrency:
+  group: snapshot
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    # Only main is archived. A manual run from another branch does nothing.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    # Worst case if every source hangs: 6 sources × (3 attempts × 30 s timeout + 2 s + 4 s
+    # backoff) = 6 × 96 s ≈ 9.6 min, plus checkout, setup, and the commit. The 30 s timeout
+    # is per socket operation, so a server that trickles bytes can take longer; 20 min
+    # leaves room for that, so the commit step still runs and the failures get recorded.
+    timeout-minutes: 20
+    steps:
+      # Actions are pinned to full commit SHAs: this job can push to main, so the code
+      # it runs must not change underneath it when a tag moves.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version-file: .python-version
+
+      - name: Fetch sources
+        id: fetch
+        # A failed source still lets the commit step run; the last step fails the job.
+        continue-on-error: true
+        run: python snapshot.py
+
+      - name: Commit snapshots and manifest
+        if: ${{ !cancelled() }}
+        env:
+          SUMMARY: ${{ steps.fetch.outputs.summary }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898233+github-actions[bot]@users.noreply.github.com"
+          git add manifest.csv snapshots/
+          if git diff --cached --quiet; then
+            echo "::error::Nothing to commit: the script did not write the manifest."
+            exit 1
+          fi
+          git commit -m "chore: snapshot $(date -u +%Y-%m-%dT%H%MZ) (${SUMMARY:-?} ok)"
+          for attempt in 1 2 3; do
+            if git push origin "HEAD:$BRANCH"; then exit 0; fi
+            git pull --rebase origin "$BRANCH"
+          done
+          echo "::error::Push failed after 3 attempts."
+          exit 1
+
+      - name: Fail the run if any source failed
+        if: steps.fetch.outcome == 'failure'
+        run: |
+          echo "::error::At least one source failed. See the rows with an error in manifest.csv."
+          exit 1

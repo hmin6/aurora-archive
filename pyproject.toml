@@ -1,0 +1,24 @@
+[project]
+name = "aurora-archive"
+version = "0.1.0"
+description = "Daily raw snapshots of short-retention space-weather forecasts and data."
+readme = "README.md"
+requires-python = ">=3.14"
+# snapshot.py uses the standard library only.
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "ruff",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "BLE"]
