@@ -78,9 +78,10 @@ written to the manifest, and the run is marked failed. The manifest is committed
 run, so the repo never goes 60 days without a commit (when GitHub would disable the
 schedule).
 
-Expected growth is about 420 kB a day, measured from the gzipped solar wind files. It
-will be re-measured after the first week (`git count-objects -vH`); if it's too fast,
-the plan is to switch to smaller files with a weekly backstop.
+Expected growth is about 420 kB a day (about 150 MB a year), measured from the gzipped
+solar wind files. It will be re-measured after the first week (`git count-objects -vH`).
+If it exceeds 1 MB a day, the next step is to deduplicate unchanged files or move older
+snapshots to Release assets.
 
 ## Development
 ```
