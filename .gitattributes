@@ -1,0 +1,6 @@
+# Normalize text files to LF in the repo and in working trees.
+* text=auto eol=lf
+
+# Snapshots are archived bytes exactly as published. Git must never convert their
+# line endings, or the SHA-256 in manifest.csv would stop matching the file.
+snapshots/** -text
