@@ -1,7 +1,7 @@
-# aurora-archive
+# boreale-archive
 
 Raw snapshots of short-retention space-weather forecasts and data (NOAA SWPC, GFZ),
-saved exactly as published, for Aurora's forecast benchmark. See README.md for the
+saved exactly as published, for Boreale's forecast benchmark. See README.md for the
 sources, their retention, and the layout.
 
 ## Stack
@@ -15,12 +15,15 @@ sources, their retention, and the layout.
 - Commit messages follow Conventional Commits (feat:, fix:, docs:, chore:, refactor:).
 - Open PRs with `gh pr create`, fill in the template, and include "Closes #<number>"
   (or "Part of #<number>" when the PR doesn't finish the issue).
+- Merge with: `gh pr merge <n> --squash --subject "<type>: <summary> (#<n>)" --body "" --delete-branch`
 - Never push directly to main. The only exception is the snapshot workflow, which
   commits snapshots and manifest rows to main as github-actions[bot].
 - Don't add "Generated with Claude Code" to PR descriptions or Co-Authored-By lines to commits.
 
 ## Working rules
 - Small, focused changes; explain non-obvious code so I can learn from it
+- I work on two computers. Anything that must survive between sessions goes in CLAUDE.md
+  or the GitHub issue, not in local memory.
 - Run `uv run ruff check .`, `uv run ruff format --check .` and `uv run pytest` before
   saying a task is done
 - Never use a URL from memory. Find it from the provider's own pages, confirm it against

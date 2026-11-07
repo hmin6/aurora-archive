@@ -1,11 +1,11 @@
-# aurora-archive
+# boreale-archive
 
 Raw snapshots of space-weather forecasts and real-time data that their publishers only
 keep for days or weeks, saved twice a day exactly as published.
 
 ## Why
 NOAA keeps its 3-day geomagnetic forecast for 75 days and its real-time solar wind for
-only 24 hours. Anything not saved is gone. These as-issued records are Aurora's forecast
+only 24 hours. Anything not saved is gone. These as-issued records are Boreale's forecast
 benchmark and the only record of what a live model actually sees, since the OMNI
 dataset is reprocessed later. This repo saves the raw files: no parsing, no cleaning.
 
@@ -35,7 +35,7 @@ Notes:
   necessarily its very first version.
 - **Not yet archived:** the GFZ Potsdam Kp forecast. Its server
   (`spaceweather.gfz.de`) refused connections when this was built, so its URL could not
-  be confirmed. Tracked in [#2](https://github.com/hmin6/aurora-archive/issues/2).
+  be confirmed. Tracked in [#2](https://github.com/hmin6/boreale-archive/issues/2).
 - **Format changes.** NOAA announces product and format changes in its
   [news archive](https://www.spaceweather.gov/news-archive). `www.swpc.noaa.gov` now
   redirects to `www.spaceweather.gov`; the data files are served from
