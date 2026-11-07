@@ -1,7 +1,7 @@
-# aurora-archive
+# boreale-archive
 
 Raw snapshots of short-retention space-weather forecasts and data (NOAA SWPC, GFZ),
-saved exactly as published, for Aurora's forecast benchmark. See README.md for the
+saved exactly as published, for Boreale's forecast benchmark. See README.md for the
 sources, their retention, and the layout.
 
 ## Stack

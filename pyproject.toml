@@ -1,5 +1,5 @@
 [project]
-name = "aurora-archive"
+name = "boreale-archive"
 version = "0.1.0"
 description = "Daily raw snapshots of short-retention space-weather forecasts and data."
 readme = "README.md"

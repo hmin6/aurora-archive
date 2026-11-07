@@ -27,7 +27,7 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 
-USER_AGENT = "aurora-archive (+https://github.com/hmin6/aurora-archive)"
+USER_AGENT = "boreale-archive (+https://github.com/hmin6/boreale-archive)"
 TIMEOUT_S = 30
 ATTEMPTS = 3
 
